@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>NAIF — لوحة التبديل الاحترافية</title>
+<meta name="description" content="صفحة احترافية لتبديل الحسابات — NAIF (Snapchat / Instagram / TikTok / Discord)"/>
+
+<style>
+:root{
+  --bg:#06060a;
+  --card:#0b0f14;
+  --gold-1: #ffd36b;
+  --gold-2: #ffb84d;
+  --muted: rgba(255,255,255,0.55);
+  --glass: rgba(255,255,255,0.02);
+}
+
+/* Reset */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", Tahoma, Arial, sans-serif;background: radial-gradient(1200px 400px at 50% 10%, rgba(255,170,60,0.03), transparent 6%), var(--bg); color:#fff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+
+/* center frame */
+.container{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+}
+
+/* neon framed card */
+.frame{
+  width:min(1100px,95vw);
+  aspect-ratio: 16/9;
+  position:relative;
+  border-radius:22px;
+  padding:36px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(255,255,255,0.02));
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  overflow:hidden;
+}
+
+/* neon border using pseudo element */
+.frame::before{
+  content:'';
+  position:absolute;
+  inset:12px;
+  border-radius:16px;
+  padding:2px;
+  background:
+    linear-gradient(90deg, transparent, rgba(255,200,80,0.18), transparent);
+  -webkit-mask: 
+    linear-gradient(#000 0 0) content-box, 
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events:none;
+  box-shadow: 0 0 40px rgba(255,165,30,0.18);
+  border:2px solid rgba(255,160,40,0.08);
+}
+
+/* glowing rounded stroke (outer) */
+.frame::after{
+  content:'';
+  position:absolute;
+  inset:6px;
+  border-radius:20px;
+  pointer-events:none;
+  box-shadow: 0 0 72px rgba(255,165,30,0.14), 0 0 28px rgba(255,165,40,0.07) inset;
+  border: 2px solid rgba(255,165,40,0.12);
+}
+
+/* inner content area */
+.screen{
+  width:100%;
+  height:100%;
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  position:relative;
+  padding:24px;
+}
+
+/* subtle textured background lines */
+.screen::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:
+    radial-gradient(circle at 10% 10%, rgba(255,255,255,0.01), transparent 6%),
+    radial-gradient(circle at 90% 90%, rgba(255,255,255,0.008), transparent 4%);
+  mix-blend-mode: overlay;
+  pointer-events:none;
+}
+
+/* logo block */
+.logo-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+  z-index:2;
+}
+
+/* monitor icon */
+.monitor{
+  width:220px;
+  height:120px;
+  border-radius:10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.28));
+  border:1px solid rgba(255,255,255,0.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6), inset 0 -6px 18px rgba(0,0,0,0.5);
+  position:relative;
+  transition: transform .45s cubic-bezier(.2,.9,.2,1);
+}
+.monitor:hover{transform: translateY(-6px)}
+
+/* NAIF text */
+.naif{
+  font-size:64px;
+  letter-spacing:12px;
+  font-weight:800;
+  color: var(--gold-1);
+  text-shadow: 0 6px 26px rgba(255,170,40,0.15);
+  -webkit-text-stroke: 0.6px rgba(0,0,0,0.35);
+}
+
+/* icons row */
+.actions{
+  display:flex;
+  gap:22px;
+  align-items:center;
+  justify-content:center;
+  z-index:3;
+  margin-top:8px;
+}
+
+/* each icon button (styled anchor) */
+.icon{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  text-decoration:none;
+  color:var(--gold-1);
+  min-width:96px;
+  padding:12px;
+  border-radius:12px;
+  transition: transform .24s ease, box-shadow .24s ease;
+  backdrop-filter: blur(6px) saturate(1.1);
+  border:1px solid rgba(255,255,255,0.03);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));
+  box-shadow: 0 8px 26px rgba(0,0,0,0.6);
+  text-align:center;
+}
+.icon:hover{ transform: translateY(-8px); box-shadow: 0 20px 60px rgba(0,0,0,0.7)}
+
+/* icon svg container */
+.icon .svg{
+  width:40px;
+  height:40px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  filter: drop-shadow(0 6px 18px rgba(255,160,40,0.08));
+}
+
+/* label */
+.icon .lbl{
+  font-size:13px;
+  color: var(--gold-1);
+  opacity:0.95;
+}
+
+/* small id text */
+.icon .id{
+  font-size:12px;
+  color: rgba(255,220,140,0.9);
+  opacity:0.9;
+  margin-top:-4px;
+}
+
+/* subtle shine animation across frame */
+.shine{
+  position:absolute;
+  left:-40%;
+  top:-10%;
+  width:60%;
+  height:140%;
+  transform: rotate(-18deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0.0) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0.0) 100%);
+  mix-blend-mode: overlay;
+  filter: blur(18px);
+  animation: sweep 9s linear infinite;
+  pointer-events:none;
+}
+@keyframes sweep{
+  0%{ transform: translateX(-30%) rotate(-18deg) }
+  50%{ transform: translateX(80%) rotate(-18deg) }
+  100%{ transform: translateX(-30%) rotate(-18deg) }
+}
+
+/* floating sparkles */
+.sparks{ position:absolute; inset:0; pointer-events:none; z-index:1 }
+.spark{ position:absolute; width:4px; height:4px; border-radius:50%; background: radial-gradient(circle, var(--gold-2), rgba(255,200,120,0.2)); opacity:0.0; transform:scale(.5); animation: twinkle 3s infinite; filter:blur(0.6px) }
+@keyframes twinkle{
+  0%{opacity:0; transform:scale(.4)}
+  10%{opacity:0.9; transform:scale(1)}
+  50%{opacity:0.15; transform:scale(.6)}
+  100%{opacity:0}
+}
+
+/* responsive */
+@media (max-width:880px){
+  .naif{font-size:48px; letter-spacing:8px}
+  .monitor{width:160px;height:92px}
+  .icon{min-width:74px;padding:8px}
+  .icon .svg{width:34px;height:34px}
+}
+@media (max-width:520px){
+  .frame{padding:18px}
+  .naif{font-size:34px; letter-spacing:6px}
+  .actions{gap:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="frame" role="region" aria-label="لوحة NAIF الاحترافية">
+    <div class="screen">
+      <div class="shine" aria-hidden="true"></div>
+      <div class="logo-wrap" aria-hidden="false">
+        <div class="monitor" aria-hidden="true">
+          <!-- monitor SVG with NAIF text inside -->
+          <svg width="160" height="92" viewBox="0 0 240 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="8" y="8" width="224" height="88" rx="10" fill="none" stroke="url(#g1)" stroke-width="6" />
+            <path d="M96 108h48" stroke="url(#g1)" stroke-width="8" stroke-linecap="round" />
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#ffd36b"/>
+                <stop offset="1" stop-color="#ffb84d"/>
+              </linearGradient>
+            </defs>
+            <text x="120" y="60" text-anchor="middle" alignment-baseline="central" font-size="26" font-weight="700" fill="#ffd97a" style="letter-spacing:6px">NAIF</text>
+          </svg>
+        </div>
+
+        <div class="naif" role="heading" aria-level="1">NAIF</div>
+      </div>
+
+      <div class="actions" role="toolbar" aria-label="روابط الحسابات">
+        <!-- Snapchat -->
+        <a class="icon" href="https://www.snapchat.com/add/n2x-6" target="_blank" rel="noopener noreferrer" title="فتح Snapchat — n2x-6">
+          <div class="svg" aria-hidden="true">
+            <!-- stylized Snapchat ghost (official-like) -->
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2c-2.6 0-3.8 1.4-3.8 1.4S7 6.3 7.1 7.8c.1 1.5.9 2.5 2 2.9 0 0 .3.1.5.1s.5 0 .5 0c1-.3 1.8-1.1 2-2.9.1-1.5.5-4.4-.3-4.4z" fill="#ffd36b"/>
+              <path d="M6 18c1.2-.5 1-1.8 2.8-1.8s2.1 1.3 3.9 1.3 2.6-1.3 3.9-1.3 1.6 1.3 2.8 1.8c0 0-1.3 1.7-3.1 1.7s-2.1-1.1-3.9-1.1S9.4 21.7 7.1 21.7 4 20 4 20c1.2-.7 1.6-1.7 2-2z" fill="#ffb84d" opacity="0.95"/>
+            </svg>
+          </div>
+          <div class="lbl">Snapchat</div>
+          <div class="id">n2x-6</div>
+        </a>
+
+        <!-- Instagram -->
+        <a class="icon" href="https://instagram.com/n21.nf" target="_blank" rel="noopener noreferrer" title="فتح Instagram — n21.nf">
+          <div class="svg" aria-hidden="true">
+            <!-- Instagram gradient camera -->
+            <svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="igg" x1="0" x2="1">
+                  <stop offset="0" stop-color="#f58529"/>
+                  <stop offset="0.5" stop-color="#dd2a7b"/>
+                  <stop offset="1" stop-color="#8134af"/>
+                </linearGradient>
+              </defs>
+              <rect x="3" y="3" width="18" height="18" rx="5" fill="url(#igg)"/>
+              <circle cx="12" cy="12" r="3.2" fill="#08141a"/>
+              <circle cx="17.2" cy="6.8" r="1" fill="#08141a"/>
+            </svg>
+          </div>
+          <div class="lbl">Instagram</div>
+          <div class="id">n21.nf</div>
+        </a>
+
+        <!-- TikTok -->
+        <a class="icon" href="https://www.tiktok.com/@uzlc" target="_blank" rel="noopener noreferrer" title="فتح TikTok — uzlc">
+          <div class="svg" aria-hidden="true">
+            <!-- TikTok-like note -->
+            <svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2v10.5A3.5 3.5 0 1 0 15.5 16V7h4V3h-7z" fill="#ffd36b"/>
+              <path d="M12 2v10.5A3.5 3.5 0 1 0 15.5 16V7h4V3h-7z" fill="#ffb84d" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="lbl">TikTok</div>
+          <div class="id">@uzlc</div>
+        </a>
+
+        <!-- Discord -->
+        <a class="icon" href="https://discord.com/users/n2l6" target="_blank" rel="noopener noreferrer" title="فتح Discord — n2l6">
+          <div class="svg" aria-hidden="true">
+            <!-- Discord-like controller logo -->
+            <svg viewBox="0 0 24 24" width="40" height="40" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 6c2-1 6-1.8 8-1.8s6 .8 8 1.8c0 0-1.4 7.5-8 7.5S4 6 4 6z" fill="#ffd36b"/>
+              <circle cx="9.2" cy="10.4" r="1.1" fill="#08141a"/>
+              <circle cx="14.8" cy="10.4" r="1.1" fill="#08141a"/>
+            </svg>
+          </div>
+          <div class="lbl">Discord</div>
+          <div class="id">n2l6</div>
+        </a>
+
+      </div>
+
+      <!-- sparkles -->
+      <div class="sparks" aria-hidden="true">
+        <!-- spark elements placed by JS -->
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// create some sparkles positions programmatically
+const sparks = document.querySelector('.sparks');
+for(let i=0;i<18;i++){
+  const s = document.createElement('div');
+  s.className='spark';
+  const x = Math.random()*90 + 5;
+  const y = Math.random()*80 + 8;
+  const dur = 2.8 + Math.random()*2.5;
+  s.style.left = x + '%';
+  s.style.top = y + '%';
+  s.style.animationDuration = dur + 's';
+  s.style.animationDelay = (Math.random()*2)+'s';
+  s.style.width = (2 + Math.random()*6) + 'px';
+  s.style.height = s.style.width;
+  sparks.appendChild(s);
+}
+
+// add subtle focus outline for keyboard nav
+document.querySelectorAll('.icon').forEach(a=>{
+  a.addEventListener('focus', ()=> a.style.outline = '2px solid rgba(255,200,80,0.18)');
+  a.addEventListener('blur', ()=> { a.style.outline = 'none'; });
+});
+
+// allow opening links with Enter for accessibility
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 'Enter' && document.activeElement && document.activeElement.classList.contains('icon')){
+    document.activeElement.click();
+  }
+});
+</script>
+</body>
+</html>
